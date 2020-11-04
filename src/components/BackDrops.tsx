@@ -13,8 +13,6 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import {ItemsProps} from 'types';
-
 import Button from './Button';
 import {ITEM_W} from './Card';
 import DetailInfo from './InfoDetail';

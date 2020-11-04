@@ -1,6 +1,5 @@
 import {getMovies} from '@api';
 import {useCallback, useEffect, useState} from 'react';
-import {ItemsProps} from 'types';
 
 export function useFetchMore() {
   const [page, setPage] = useState(3);

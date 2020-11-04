@@ -17,7 +17,6 @@ import Animated, {Extrapolate} from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {ITEM_W} from 'components/Card';
-import {ItemsProps} from 'types';
 
 const {width, height} = Dimensions.get('screen');
 
