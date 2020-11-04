@@ -15,6 +15,8 @@ export interface MovieReults {
 
 type Results = {
   results: MovieReults[];
+  page: number;
+  total_pages: number;
 };
 
 const genres = {
@@ -44,7 +46,7 @@ const getImagePath = (path: string) => `https://image.tmdb.org/t/p/w440_and_h660
 const getBackdropPath = (path: string) => `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
 export const getMovies = async (page: string | number = 1) => {
-  const {results}: Results = await fetch(API_URL(page)).then(x => x.json());
+  const {results, page: pages, total_pages}: Results = await fetch(API_URL(page)).then(x => x.json());
   const movies = results.map(
     ({id, original_title, poster_path, backdrop_path, vote_average, overview, release_date, genre_ids, adult}) => ({
       key: String(id),

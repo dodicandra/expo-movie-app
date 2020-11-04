@@ -20,19 +20,17 @@ export function useFetchMore() {
       try {
         setLoading(true);
         const data = await getMovies(page);
-        setMovie(
-          curen =>
-            [
-              {key: `item-${Math.random() * 1238}`, title: `title-${Math.random() * 98347}`},
-              ...data,
-              {key: `item-${Math.random() * 1238}`, title: `title-${Math.random() * 98347}`}
-            ] as any
-        );
+        setMovie(curen => [
+          {key: `item-${Math.random() * 1238}`, title: `title-${Math.random() * 98347}`},
+          ...(data as any),
+          {key: `item-${Math.random() * 1238}`, title: `title-${Math.random() * 98347}`}
+        ]);
         setShouldFetch(false);
         setLoading(false);
         setPage(page + 1);
       } catch (err) {
         console.log(err);
+        setLoading(false);
       }
     };
     getMoviess();

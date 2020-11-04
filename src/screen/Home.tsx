@@ -1,4 +1,4 @@
-import {BackDrops, Button, Card, SearchBar} from '@components';
+import {Arrow, BackDrops, Button, Card, SearchBar} from '@components';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useFetchMore} from '@utils';
 import React from 'react';
@@ -69,16 +69,22 @@ const RenderItem: React.FC<List> = React.memo(({listX, data: {index, item}, onPr
 
 const Home: React.FC<HomeStack> = ({navigation}) => {
   const scrollX = new Animated.Value(0);
-  const [movie, fetchMore] = useFetchMore();
+  const [movie, _, loading] = useFetchMore();
 
   const onScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>([{nativeEvent: {contentOffset: {x: scrollX}}}], {
     useNativeDriver: true
   });
 
+  if (loading) {
+    return <View />;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar />
       <BackDrops x={scrollX} data={movie} />
+      <Arrow rotate="180deg" style={{top: height * 0.4, left: width * 0.04, zIndex: 20}} />
+      <Arrow rotate="0deg" style={{top: height * 0.4, right: width * 0.04, zIndex: 21}} />
       <AnimatedFlatList
         data={movie}
         horizontal
@@ -88,7 +94,7 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
         contentContainerStyle={{paddingVertical: 60}}
         snapToInterval={ITEM_W}
         onScroll={onScroll}
-        renderToHardwareTextureAndroid
+        onEndReachedThreshold={0.2}
         snapToAlignment="start"
         renderItem={item => <RenderItem onPress={() => navigation.navigate('Booking', item.item)} data={item} listX={scrollX} />}
       />

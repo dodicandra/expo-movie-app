@@ -1,12 +1,12 @@
 export interface ItemsProps {
   key: string;
-  poster: string;
   title: string;
-  genres: Array<any>;
+  poster: string;
+  backdrop: string;
+  rating: string;
   description: string;
-  backdrop: any;
-  rating: number;
-  adult: boolean;
   releaseDate: string;
+  genres: string[];
+  adult: boolean;
   price: number;
 }

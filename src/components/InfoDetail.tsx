@@ -10,22 +10,22 @@ interface Props {
 
 const DetailInfo: React.FC<Props> = ({date, genre}) => {
   const year = new Date(date!).getFullYear();
-
+  const genres = genre?.map(value => ` • ${value}`);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{year}</Text>
-      {genre?.map(value => (
-        <Text numberOfLines={1} adjustsFontSizeToFit style={styles.genre} key={value}>
-          • {value}
-        </Text>
-      ))}
+      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.text}>
+        {year}
+      </Text>
+      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.genre}>
+        {genres}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     width: width * 0.9,
     justifyContent: 'space-evenly',
     alignItems: 'center'
