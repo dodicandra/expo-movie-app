@@ -1,13 +1,25 @@
 {
   "expo": {
-    "name": "movieapp",
-    "slug": "movieapp",
+    "name": "the movie apps",
+    "slug": "the-movie-apps",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": ["expo.ts", "expo.tsx", "expo.js", "expo.jsx", "ts", "tsx", "js", "jsx", "json", "wasm", "svg"]
+      "sourceExts": [
+        "expo.ts",
+        "expo.tsx",
+        "expo.js",
+        "expo.jsx",
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "wasm",
+        "svg"
+      ]
     },
     "splash": {
       "image": "./assets/splash.png",
@@ -17,7 +29,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -29,6 +43,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "movie app ( reference https://dribbble.com/shots/10812839-Movie-Ticket-App  )",
+    "githubUrl": "https://github.com/dodicandra/expo-movie-app.git"
   }
 }

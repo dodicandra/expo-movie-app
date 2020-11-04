@@ -45,8 +45,8 @@ const API_URL = (page: string | number) => `https://api.themoviedb.org/3/movie/p
 const getImagePath = (path: string) => `https://image.tmdb.org/t/p/w440_and_h660_face${path}`;
 const getBackdropPath = (path: string) => `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
-export const getMovies = async (page: string | number = 1) => {
-  const {results, page: pages, total_pages}: Results = await fetch(API_URL(page)).then(x => x.json());
+export const getMovies = async (pages: string | number = 1) => {
+  const {results, page, total_pages}: Results = await fetch(API_URL(pages)).then(x => x.json());
   const movies = results.map(
     ({id, original_title, poster_path, backdrop_path, vote_average, overview, release_date, genre_ids, adult}) => ({
       key: String(id),
@@ -62,5 +62,5 @@ export const getMovies = async (page: string | number = 1) => {
     })
   );
 
-  return movies;
+  return {page, total_pages, movies};
 };

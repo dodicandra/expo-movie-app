@@ -1,39 +1,43 @@
 import {getMovies} from '@api';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 
-export function useFetchMore() {
-  const [page, setPage] = useState(3);
+export function useFetchMore(pagenumber: number | string) {
+  const [page, setPage] = useState({page: pagenumber, total: 0});
 
   const [movie, setMovie] = useState<ItemsProps[]>([]);
-  const [shouldFetch, setShouldFetch] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const fetchMore = useCallback(() => setShouldFetch(true), []);
+  const movieMemo = useMemo(() => ({movie, page}), [loading]);
 
   useEffect(() => {
-    if (!shouldFetch) {
-      return;
-    }
+    let didcancel = false;
 
     const getMoviess = async () => {
       try {
         setLoading(true);
-        const data = await getMovies(page);
-        setMovie(curen => [
-          {key: `item-${Math.random() * 1238}`, title: `title-${Math.random() * 98347}`},
-          ...(data as any),
-          {key: `item-${Math.random() * 1238}`, title: `title-${Math.random() * 98347}`}
-        ]);
-        setShouldFetch(false);
+        const data = await getMovies(pagenumber);
+        setMovie(curen => {
+          return [
+            ...new Set([
+              {key: `item-${Math.random() * 1238}`, title: `title-${Math.random() * 98347}`},
+              ...(data.movies as any),
+              {key: `item-${Math.random() * 1238}`, title: `title-${Math.random() * 98347}`}
+            ])
+          ];
+        });
+        setPage({page: data.page, total: data.total_pages});
         setLoading(false);
-        setPage(page + 1);
       } catch (err) {
         console.log(err);
         setLoading(false);
       }
     };
     getMoviess();
-  }, [page, shouldFetch]);
 
-  return [movie, fetchMore, loading] as const;
+    return () => {
+      didcancel = true;
+    };
+  }, [pagenumber]);
+
+  return [movieMemo.movie, loading, movieMemo.page] as const;
 }

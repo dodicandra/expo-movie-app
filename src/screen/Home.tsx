@@ -1,7 +1,7 @@
 import {Arrow, BackDrops, Button, Card, SearchBar} from '@components';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useFetchMore} from '@utils';
-import React from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -20,7 +20,7 @@ import {ITEM_W} from 'components/Card';
 
 const {width, height} = Dimensions.get('screen');
 
-const AnimatedFlatList: React.FC<FlatListProps<ItemsProps>> = Animated.createAnimatedComponent(FlatList);
+const AnimatedFlatList: React.FC<FlatListProps<ItemsProps>> = React.memo(Animated.createAnimatedComponent(FlatList));
 
 const EMTY = (width - ITEM_W) / 2;
 
@@ -32,47 +32,58 @@ type List = {
 
 type HomeStack = StackScreenProps<StackHome<ItemsProps>, 'Home'>;
 
-const RenderItem: React.FC<List> = React.memo(({listX, data: {index, item}, onPress}) => {
-  if (!item.poster) {
-    return <View style={{width: EMTY}} />;
+class RenderItem extends React.PureComponent<List> {
+  render() {
+    const {
+      listX,
+      data: {index, item},
+      onPress
+    } = this.props;
+
+    if (!item.poster) {
+      return <View style={{width: EMTY}} />;
+    }
+
+    const inputRange = [(index - 2) * ITEM_W, (index - 1) * ITEM_W, index * ITEM_W];
+
+    const translateY = listX.interpolate({
+      inputRange,
+      outputRange: [-100, 0, -100],
+      extrapolate: Extrapolate.CLAMP
+    });
+
+    const opacity = listX.interpolate({
+      inputRange,
+      outputRange: [0, 1, 0],
+      extrapolate: Extrapolate.CLAMP
+    });
+
+    const itemTranslate = listX.interpolate({
+      inputRange,
+      outputRange: [100, 40, 100],
+      extrapolate: Extrapolate.CLAMP
+    });
+    return (
+      <View style={styles.item}>
+        <Animated.View style={{alignItems: 'center', opacity, transform: [{translateY}]}}>
+          <Button color="white" onPress={onPress} style={{marginTop: 30}} text="buy ticket" backGround="#F00000" />
+        </Animated.View>
+        <Card style={{transform: [{translateY: itemTranslate}]}} src={{uri: item.poster}} title={item.title} />
+      </View>
+    );
   }
-
-  const inputRange = [(index - 2) * ITEM_W, (index - 1) * ITEM_W, index * ITEM_W];
-
-  const translateY = listX.interpolate({
-    inputRange,
-    outputRange: [-100, 0, -100],
-    extrapolate: Extrapolate.CLAMP
-  });
-
-  const opacity = listX.interpolate({
-    inputRange,
-    outputRange: [0, 1, 0],
-    extrapolate: Extrapolate.CLAMP
-  });
-
-  const itemTranslate = listX.interpolate({
-    inputRange,
-    outputRange: [100, 40, 100],
-    extrapolate: Extrapolate.CLAMP
-  });
-  return (
-    <View style={styles.item}>
-      <Animated.View style={{alignItems: 'center', opacity, transform: [{translateY}]}}>
-        <Button color="white" onPress={onPress} style={{marginTop: 30}} text="buy ticket" backGround="#F00000" />
-      </Animated.View>
-      <Card style={{transform: [{translateY: itemTranslate}]}} src={{uri: item.poster}} title={item.title} />
-    </View>
-  );
-});
+}
 
 const Home: React.FC<HomeStack> = ({navigation}) => {
   const scrollX = new Animated.Value(0);
-  const [movie, _, loading] = useFetchMore();
+  const [page, setPage] = useState(1);
+  const [movie, loading, pages] = useFetchMore(page);
 
   const onScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>([{nativeEvent: {contentOffset: {x: scrollX}}}], {
     useNativeDriver: true
   });
+
+  const next = Number(pages.total) - Number(pages.page);
 
   if (loading) {
     return <View />;
@@ -82,8 +93,20 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <SearchBar />
       <BackDrops x={scrollX} data={movie} />
-      <Arrow rotate="180deg" style={{top: height * 0.4, left: width * 0.04, zIndex: 20}} />
-      <Arrow rotate="0deg" style={{top: height * 0.4, right: width * 0.04, zIndex: 21}} />
+      <Arrow
+        disable={page === 1}
+        onPress={() => setPage(old => Math.max(old - 1, 1))}
+        rotate="180deg"
+        style={{top: height * 0.4, left: width * 0.04, zIndex: 20}}
+      />
+      <Arrow
+        disable={next === 0}
+        onPress={() => {
+          setPage(page + 1);
+        }}
+        rotate="0deg"
+        style={{top: height * 0.4, right: width * 0.04, zIndex: 21}}
+      />
       <AnimatedFlatList
         data={movie}
         horizontal
