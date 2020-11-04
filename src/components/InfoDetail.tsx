@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, Dimensions} from 'react-native';
 
-const {width} = Dimensions.get('window');
+const {width} = Dimensions.get('screen');
 
 interface Props {
   date?: string;
@@ -15,7 +15,7 @@ const DetailInfo: React.FC<Props> = ({date, genre}) => {
     <View style={styles.container}>
       <Text style={styles.text}>{year}</Text>
       {genre?.map(value => (
-        <Text suppressHighlighting adjustsFontSizeToFit style={styles.genre} key={value}>
+        <Text numberOfLines={1} adjustsFontSizeToFit style={styles.genre} key={value}>
           • {value}
         </Text>
       ))}
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     width: width * 0.9,
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     alignItems: 'center'
   },
   text: {

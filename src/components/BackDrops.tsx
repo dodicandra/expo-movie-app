@@ -1,32 +1,73 @@
 import React from 'react';
-import {StyleSheet, View, FlatList, FlatListProps, Dimensions, Image, Text} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  FlatListProps,
+  ImageBackground,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native';
 import Animated from 'react-native-reanimated';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {ItemsProps} from '../../App';
 
-const {width, height} = Dimensions.get('window');
+import {ItemsProps} from 'types';
 
-const BACKDROP_H = height * 0.65;
+import Button from './Button';
+import {ITEM_W} from './Card';
+import DetailInfo from './InfoDetail';
+
+const {width, height} = Dimensions.get('screen');
 
 const AnimatedFlatList: React.FC<FlatListProps<ItemsProps>> = Animated.createAnimatedComponent(FlatList);
 
 interface Props {
   data: ItemsProps[];
+  x: Animated.Value<number>;
 }
 
-const BackDrops: React.FC<Props> = ({data}) => {
+const BackDrops: React.FC<Props> = ({data, x}) => {
   return (
-    <View style={[StyleSheet.absoluteFill, styles.container]}>
+    <View style={[StyleSheet.absoluteFillObject, styles.container]}>
       <AnimatedFlatList
-        data={data}
+        data={data.reverse()}
         keyExtractor={item => String(item.key + Math.random())}
         removeClippedSubviews={false}
         contentContainerStyle={{width, height}}
+        pagingEnabled
+        horizontal={true}
         renderItem={({item, index}) => {
+          if (!item.backdrop) {
+            return null;
+          }
+
+          const translateX = x.interpolate({
+            inputRange: [(index - 2) * ITEM_W, (index - 1) * ITEM_W],
+            outputRange: [0, width]
+          });
+
           return (
-            <View style={styles.wraper}>
-              <Image resizeMode="cover" style={[styles.img, {width: width}]} source={{uri: !item.backdrop ? null : item.backdrop}} />
-            </View>
+            <Animated.View style={[StyleSheet.absoluteFill, styles.root, {width: translateX}]}>
+              <ImageBackground resizeMode="cover" source={{uri: item.backdrop}} style={[styles.wraper]}>
+                <View style={styles.infoWraper}>
+                  <View style={styles.info}>
+                    <Text numberOfLines={1} style={styles.title} adjustsFontSizeToFit>
+                      {item?.title}
+                    </Text>
+                    <View style={styles.rating}>
+                      <Button color="white" text="popular with friend" />
+                      <Button color="white" text={item?.adult ? '+18' : '+15'} paddingHorizontal={5} />
+                      <Button text={`${item?.rating}`} per backGround="#F7BB0E" />
+                    </View>
+                  </View>
+                  <DetailInfo genre={item?.genres} date={item?.releaseDate} />
+                </View>
+                <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                  <View style={styles.opacity} />
+                </TouchableWithoutFeedback>
+              </ImageBackground>
+            </Animated.View>
           );
         }}
       />
@@ -35,17 +76,52 @@ const BackDrops: React.FC<Props> = ({data}) => {
 };
 
 const styles = StyleSheet.create({
+  root: {
+    overflow: 'hidden',
+    height
+  },
   container: {
     width,
     height
   },
-  img: {
-    height
-  },
   wraper: {
+    position: 'absolute',
+    height,
+    width
+  },
+  infoWraper: {
+    marginTop: height * 0.2,
+    justifyContent: 'space-around',
+    alignContent: 'center',
+    alignItems: 'center',
+    zIndex: 10
+  },
+  rating: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    zIndex: 20
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 1.4,
+    marginBottom: 20
+  },
+  info: {
+    flexDirection: 'column',
+    width: width * 0.9,
+    paddingVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  opacity: {
+    ...StyleSheet.absoluteFillObject,
     width,
     height,
-    position: 'absolute'
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 1
   }
 });
 

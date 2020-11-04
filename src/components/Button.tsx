@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity, Text, GestureResponderEvent, ViewStyle} from 'react-native';
+import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
 
 interface Props {
   text?: string;
@@ -9,14 +9,19 @@ interface Props {
   backGround?: string;
   paddingHorizontal?: number;
   style?: ViewStyle;
+  disabled?: boolean;
 }
 
-const Button: React.FC<Props> = ({text, onPress, color, per, backGround, paddingHorizontal, style}) => {
+const Button: React.FC<Props> = ({disabled, text, onPress, color, per, backGround, paddingHorizontal, style}) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Text adjustsFontSizeToFit style={[styles.text, style, {color, backgroundColor: backGround, paddingHorizontal}]}>
+    <TouchableOpacity disabled={disabled} style={styles.container} onPress={onPress}>
+      <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.text, style, {color, backgroundColor: backGround, paddingHorizontal}]}>
         {text}
-        {per && <Text style={styles.span}> /10</Text>}
+        {per && (
+          <Text numberOfLines={1} adjustsFontSizeToFit style={styles.span}>
+            /10
+          </Text>
+        )}
       </Text>
     </TouchableOpacity>
   );

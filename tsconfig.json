@@ -10,9 +10,14 @@
     "strict": true,
     "target": "ESNext",
     "module": "CommonJS",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@components": ["./components"]
+      "*": ["src/*"],
+      "@components": ["src/components"],
+      "@config": ["src/config"],
+      "@api": ["src/api"],
+      "@screen": ["src/screen"],
+      "@types": ["src/types"]
     }
   }
 }

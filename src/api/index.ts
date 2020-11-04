@@ -1,4 +1,4 @@
-const API_KEY = 'ff99aa7252c2cd4c74fb35f26a0ee26c';
+import {API_KEY} from '@config';
 
 export interface MovieReults {
   id: string;
