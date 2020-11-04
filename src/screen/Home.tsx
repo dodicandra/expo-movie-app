@@ -1,36 +1,79 @@
-import {getMovies} from '@api';
 import {BackDrops, Button, Card, SearchBar} from '@components';
-import {ITEM_W} from 'components/Card';
-import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, View, Dimensions, NativeSyntheticEvent, NativeScrollEvent, FlatListProps, Alert} from 'react-native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {useFetchMore} from '@utils';
+import React from 'react';
+import {
+  Dimensions,
+  FlatList,
+  FlatListProps,
+  GestureResponderEvent,
+  ListRenderItemInfo,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+  View
+} from 'react-native';
 import Animated, {Extrapolate} from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+import {ITEM_W} from 'components/Card';
 import {ItemsProps} from 'types';
 
-const {width} = Dimensions.get('screen');
+const {width, height} = Dimensions.get('screen');
 
 const AnimatedFlatList: React.FC<FlatListProps<ItemsProps>> = Animated.createAnimatedComponent(FlatList);
 
 const EMTY = (width - ITEM_W) / 2;
 
-const Home: React.FC = () => {
-  const [movie, setMovie] = useState<ItemsProps[]>([]);
+type List = {
+  listX: Animated.Value<number>;
+  data: ListRenderItemInfo<ItemsProps>;
+  onPress?: (e: GestureResponderEvent) => void;
+};
+
+type HomeStack = StackScreenProps<StackHome<ItemsProps>, 'Home'>;
+
+const RenderItem: React.FC<List> = React.memo(({listX, data: {index, item}, onPress}) => {
+  if (!item.poster) {
+    return <View style={{width: EMTY}} />;
+  }
+
+  const inputRange = [(index - 2) * ITEM_W, (index - 1) * ITEM_W, index * ITEM_W];
+
+  const translateY = listX.interpolate({
+    inputRange,
+    outputRange: [-100, 0, -100],
+    extrapolate: Extrapolate.CLAMP
+  });
+
+  const opacity = listX.interpolate({
+    inputRange,
+    outputRange: [0, 1, 0],
+    extrapolate: Extrapolate.CLAMP
+  });
+
+  const itemTranslate = listX.interpolate({
+    inputRange,
+    outputRange: [100, 40, 100],
+    extrapolate: Extrapolate.CLAMP
+  });
+  return (
+    <View style={styles.item}>
+      <Animated.View style={{alignItems: 'center', opacity, transform: [{translateY}]}}>
+        <Button color="white" onPress={onPress} style={{marginTop: 30}} text="buy ticket" backGround="#F00000" />
+      </Animated.View>
+      <Card style={{transform: [{translateY: itemTranslate}]}} src={{uri: item.poster}} title={item.title} />
+    </View>
+  );
+});
+
+const Home: React.FC<HomeStack> = ({navigation}) => {
   const scrollX = new Animated.Value(0);
+  const [movie, fetchMore] = useFetchMore();
 
   const onScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>([{nativeEvent: {contentOffset: {x: scrollX}}}], {
     useNativeDriver: true
   });
-
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getMovies();
-      setMovie([{key: 'item-right', title: 'item-right'}, ...(data as any), {key: 'item-left', title: 'item-left'}]);
-    };
-    if (movie.length === 0) {
-      getData();
-    }
-  }, [movie]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,46 +84,13 @@ const Home: React.FC = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.items}
-        keyExtractor={item => item.title}
+        keyExtractor={item => String(item.key + Math.random() * 1000)}
         contentContainerStyle={{paddingVertical: 60}}
         snapToInterval={ITEM_W}
         onScroll={onScroll}
         renderToHardwareTextureAndroid
         snapToAlignment="start"
-        renderItem={({item, index}) => {
-          if (!item.poster) {
-            return <View style={{width: EMTY}} />;
-          }
-
-          const inputRange = [(index - 2) * ITEM_W, (index - 1) * ITEM_W, index * ITEM_W];
-
-          const translateY = scrollX.interpolate({
-            inputRange,
-            outputRange: [-100, 0, -100],
-            extrapolate: Extrapolate.CLAMP
-          });
-
-          const opacity = scrollX.interpolate({
-            inputRange,
-            outputRange: [0, 1, 0],
-            extrapolate: Extrapolate.CLAMP
-          });
-
-          const itemTranslate = scrollX.interpolate({
-            inputRange,
-            outputRange: [100, 40, 100],
-            extrapolate: Extrapolate.CLAMP
-          });
-
-          return (
-            <View style={styles.item}>
-              <Animated.View style={{alignItems: 'center', opacity, transform: [{translateY}]}}>
-                <Button color="white" onPress={() => Alert.alert('cl')} style={{marginTop: 30}} text="buy ticket" backGround="#F00000" />
-              </Animated.View>
-              <Card style={{transform: [{translateY: itemTranslate}]}} src={{uri: item.backdrop}} title={item.title} />
-            </View>
-          );
-        }}
+        renderItem={item => <RenderItem onPress={() => navigation.navigate('Booking', item.item)} data={item} listX={scrollX} />}
       />
     </SafeAreaView>
   );
@@ -93,7 +103,7 @@ const styles = StyleSheet.create({
   },
   items: {
     ...StyleSheet.absoluteFillObject,
-    top: 270
+    top: height * 0.28
   },
   item: {
     padding: 10,

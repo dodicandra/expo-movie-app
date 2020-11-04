@@ -1,0 +1,1 @@
+export {useFetchMore} from './useInfinit';

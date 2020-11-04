@@ -10,9 +10,11 @@
   "dependencies": {
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.8.4",
+    "@react-navigation/stack": "^5.12.1",
     "add": "^2.0.6",
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
+    "immer": "^7.0.14",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",

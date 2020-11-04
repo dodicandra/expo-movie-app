@@ -8,4 +8,5 @@ export interface ItemsProps {
   rating: number;
   adult: boolean;
   releaseDate: string;
+  price: number;
 }

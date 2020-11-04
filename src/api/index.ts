@@ -10,6 +10,7 @@ export interface MovieReults {
   release_date: string;
   genre_ids: Array<keyof typeof genres>;
   adult: boolean;
+  price: number;
 }
 
 type Results = {
@@ -38,12 +39,12 @@ const genres = {
   10770: 'TV Movie'
 };
 
-const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`;
+const API_URL = (page: string | number) => `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
 const getImagePath = (path: string) => `https://image.tmdb.org/t/p/w440_and_h660_face${path}`;
 const getBackdropPath = (path: string) => `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
-export const getMovies = async () => {
-  const {results}: Results = await fetch(API_URL).then(x => x.json());
+export const getMovies = async (page: string | number = 1) => {
+  const {results}: Results = await fetch(API_URL(page)).then(x => x.json());
   const movies = results.map(
     ({id, original_title, poster_path, backdrop_path, vote_average, overview, release_date, genre_ids, adult}) => ({
       key: String(id),
@@ -54,7 +55,8 @@ export const getMovies = async () => {
       description: overview,
       releaseDate: release_date,
       genres: genre_ids.map(genre => genres[genre]),
-      adult
+      adult,
+      price: 25000
     })
   );
 
