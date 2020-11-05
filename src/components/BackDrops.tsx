@@ -54,7 +54,7 @@ class RenderItem extends React.PureComponent<List> {
               <View style={styles.rating}>
                 <Button color="white" text="popular with friend" />
                 <Button color="white" text={!item?.adult ? '+18' : '+15'} paddingHorizontal={5} />
-                <Button text={`${item?.rating}`} per backGround="#F7BB0E" />
+                <Button text={`${item?.rating}`} per backGround={colore.kuning} />
               </View>
             </View>
             <DetailInfo genre={item?.genres} date={item?.releaseDate} />

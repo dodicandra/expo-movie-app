@@ -1,21 +1,20 @@
+import Provider, {useMovie} from '@hooks';
 import {NavigationContainer} from '@react-navigation/native';
 import {HomeStack} from '@router';
-import React, {useContext} from 'react';
-import {ActivityIndicator, StatusBar, View} from 'react-native';
+import React from 'react';
+import {ActivityIndicator, Modal, StatusBar, View} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {Modal} from 'react-native';
-import Provider, {ContextAPI} from '@hooks';
 
 function Main() {
-  const {loading} = useContext(ContextAPI);
+  const {loading} = useMovie();
   return (
     <SafeAreaProvider>
       <StatusBar animated translucent showHideTransition="fade" hidden />
       <NavigationContainer>
         <HomeStack />
         <Modal statusBarTranslucent hardwareAccelerated animationType="slide" visible={loading} transparent={true}>
-          <View style={{backgroundColor: 'rgba(200, 200, 200, 0.3)', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size="large" color="rgb(105, 41, 255)" />
+          <View style={{backgroundColor: colore.hitam1, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size="large" color={colore.blue1} />
           </View>
         </Modal>
       </NavigationContainer>

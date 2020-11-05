@@ -1,5 +1,5 @@
 import {AnimatedFlatList, Arrow, BackDrops, Button, Card, SearchBar} from '@components';
-import {ContextAPI} from '@hooks';
+import {useMovie} from '@hooks';
 import {StackScreenProps} from '@react-navigation/stack';
 import React, {useContext} from 'react';
 import {
@@ -73,7 +73,7 @@ class RenderItem extends React.PureComponent<List> {
 const Home: React.FC<HomeStack> = ({navigation}) => {
   const scrollX = new Animated.Value(0);
 
-  const {setPages, movie, page, pages, loading} = useContext(ContextAPI);
+  const {setPages, movie, page, pages, loading} = useMovie();
 
   const onScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>([{nativeEvent: {contentOffset: {x: scrollX}}}], {
     useNativeDriver: true
