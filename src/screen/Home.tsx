@@ -1,11 +1,9 @@
-import {Arrow, BackDrops, Button, Card, SearchBar} from '@components';
+import {AnimatedFlatList, Arrow, BackDrops, Button, Card, SearchBar} from '@components';
+import {ContextAPI} from '@hooks';
 import {StackScreenProps} from '@react-navigation/stack';
-import {useFetchMore} from '@utils';
-import React, {useMemo, useState} from 'react';
+import React, {useContext} from 'react';
 import {
   Dimensions,
-  FlatList,
-  FlatListProps,
   GestureResponderEvent,
   ListRenderItemInfo,
   NativeScrollEvent,
@@ -19,8 +17,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {ITEM_W} from 'components/Card';
 
 const {width, height} = Dimensions.get('screen');
-
-const AnimatedFlatList: React.FC<FlatListProps<ItemsProps>> = React.memo(Animated.createAnimatedComponent(FlatList));
 
 const EMTY = (width - ITEM_W) / 2;
 
@@ -57,12 +53,12 @@ class RenderItem extends React.PureComponent<List> {
       outputRange: [0, 1, 0],
       extrapolate: Extrapolate.CLAMP
     });
-
     const itemTranslate = listX.interpolate({
       inputRange,
       outputRange: [100, 40, 100],
       extrapolate: Extrapolate.CLAMP
     });
+
     return (
       <View style={styles.item}>
         <Animated.View style={{alignItems: 'center', opacity, transform: [{translateY}]}}>
@@ -76,14 +72,17 @@ class RenderItem extends React.PureComponent<List> {
 
 const Home: React.FC<HomeStack> = ({navigation}) => {
   const scrollX = new Animated.Value(0);
-  const [page, setPage] = useState(1);
-  const [movie, loading, pages] = useFetchMore(page);
+
+  const {setPages, movie, page, pages, loading} = useContext(ContextAPI);
 
   const onScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>([{nativeEvent: {contentOffset: {x: scrollX}}}], {
     useNativeDriver: true
   });
+  const next = Number(pages?.total) - Number(pages?.page);
 
-  const next = Number(pages.total) - Number(pages.page);
+  const actions = (items: ItemsProps) => {
+    navigation.navigate('Booking', items);
+  };
 
   if (loading) {
     return <View />;
@@ -92,17 +91,17 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar />
-      <BackDrops x={scrollX} data={movie} />
+      <BackDrops x={scrollX} data={movie!} />
       <Arrow
         disable={page === 1}
-        onPress={() => setPage(old => Math.max(old - 1, 1))}
+        onPress={() => setPages(old => Math.max(old - 1, 1))}
         rotate="180deg"
         style={{top: height * 0.4, left: width * 0.04, zIndex: 20}}
       />
       <Arrow
         disable={next === 0}
         onPress={() => {
-          setPage(page + 1);
+          setPages(page + 1);
         }}
         rotate="0deg"
         style={{top: height * 0.4, right: width * 0.04, zIndex: 21}}
@@ -118,7 +117,10 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
         onScroll={onScroll}
         onEndReachedThreshold={0.2}
         snapToAlignment="start"
-        renderItem={item => <RenderItem onPress={() => navigation.navigate('Booking', item.item)} data={item} listX={scrollX} />}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={20}
+        initialNumToRender={10}
+        renderItem={item => <RenderItem onPress={() => actions(item.item)} data={item} listX={scrollX} />}
       />
     </SafeAreaView>
   );

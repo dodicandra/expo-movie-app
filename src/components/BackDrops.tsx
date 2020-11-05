@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
-  FlatList,
-  FlatListProps,
   ImageBackground,
   Keyboard,
   ListRenderItemInfo,
@@ -13,13 +11,12 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 
+import AnimatedFlatList from './AnimatedFlatList';
 import Button from './Button';
 import {ITEM_W} from './Card';
 import DetailInfo from './InfoDetail';
 
 const {width, height} = Dimensions.get('screen');
-
-const AnimatedFlatList: React.FC<FlatListProps<ItemsProps>> = React.memo(Animated.createAnimatedComponent(FlatList));
 
 type List = {
   listX: Animated.Value<number>;
@@ -71,27 +68,32 @@ class RenderItem extends React.PureComponent<List> {
   }
 }
 
-const BackDrops: React.FC<Props> = ({data, x}) => {
-  const [movie, setMovie] = useState<ItemsProps[]>(data);
+const BackDrops: React.FC<Props> = React.memo(
+  ({data, x}) => {
+    const [movie, setMovie] = useState<ItemsProps[]>(data.reverse());
 
-  useEffect(() => {
-    setMovie(data);
-  }, [data]);
+    useEffect(() => {
+      setMovie(data.reverse());
+    }, [data]);
 
-  return (
-    <View style={[StyleSheet.absoluteFillObject, styles.container]}>
-      <AnimatedFlatList
-        data={movie.reverse()}
-        keyExtractor={item => String(item.key + Math.random())}
-        removeClippedSubviews={false}
-        contentContainerStyle={{width, height}}
-        pagingEnabled
-        horizontal={true}
-        renderItem={item => <RenderItem data={item} listX={x} />}
-      />
-    </View>
-  );
-};
+    return (
+      <View style={[StyleSheet.absoluteFillObject, styles.container]}>
+        <AnimatedFlatList
+          data={movie}
+          keyExtractor={item => String(item.key + Math.random())}
+          removeClippedSubviews={false}
+          contentContainerStyle={{width, height}}
+          pagingEnabled
+          horizontal={true}
+          renderItem={item => <RenderItem data={item} listX={x} />}
+        />
+      </View>
+    );
+  },
+  (prev, next) => {
+    return JSON.stringify(prev.data) === JSON.stringify(next.data);
+  }
+);
 
 const styles = StyleSheet.create({
   root: {

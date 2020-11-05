@@ -15,7 +15,11 @@ interface Props {
 const Button: React.FC<Props> = ({disabled, text, onPress, color, per, backGround, paddingHorizontal, style}) => {
   return (
     <TouchableOpacity disabled={disabled} style={styles.container} onPress={onPress}>
-      <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.text, style, {color, backgroundColor: backGround, paddingHorizontal}]}>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        style={[styles.text, style, {color, backgroundColor: backGround, paddingHorizontal}]}
+      >
         {text}
         {per && (
           <Text numberOfLines={1} adjustsFontSizeToFit style={styles.span}>

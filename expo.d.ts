@@ -1,3 +1,5 @@
+/// <reference types="react" />
+
 declare module '*.svg' {
   import React from 'react';
   import {SvgProps} from 'react-native-svg';
@@ -23,3 +25,11 @@ interface ItemsProps {
   adult: boolean;
   price: number;
 }
+
+/**
+ *
+ * T for React Props
+ * S for Static React Shared Element
+ *
+ */
+type ComStatic<T, S> = React.FC<T & S>;

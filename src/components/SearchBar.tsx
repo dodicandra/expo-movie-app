@@ -15,7 +15,13 @@ const SearchBar: React.FC = () => {
         </TouchableOpacity>
       </Box>
       <View style={[styles.container]}>
-        <TextInput numberOfLines={1} allowFontScaling placeholderTextColor="#FFFFFF" style={styles.input} placeholder="Search Films..." />
+        <TextInput
+          numberOfLines={1}
+          allowFontScaling
+          placeholderTextColor="#FFFFFF"
+          style={styles.input}
+          placeholder="Search Films..."
+        />
         <Search width={25} height={25} fill="#FFFFFF" />
       </View>
     </View>
