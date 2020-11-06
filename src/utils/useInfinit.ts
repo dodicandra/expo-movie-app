@@ -76,6 +76,9 @@ export function useFetchMore(pagenumber: number | string) {
         });
         dispatch({type: 'set-page', payload: {page: data.page, total: data.total_pages}});
         dispatch({type: 'set-loading'});
+        return () => {
+          didcancel = true;
+        };
       } catch (err) {
         console.log(err);
         dispatch({type: 'set-loading'});

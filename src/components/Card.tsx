@@ -1,19 +1,16 @@
-import React from 'react';
+import React, {forwardRef} from 'react';
 import {
+  Dimensions,
+  GestureResponderEvent,
   Image,
   ImageSourcePropType,
+  StyleProp,
   StyleSheet,
   Text,
-  View,
-  Dimensions,
-  ViewStyle,
   TouchableOpacity,
-  GestureResponderEvent,
-  Alert,
-  StyleProp
+  ViewStyle
 } from 'react-native';
-import Animated, {Extrapolate} from 'react-native-reanimated';
-import Button from './Button';
+import Animated from 'react-native-reanimated';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -26,20 +23,18 @@ interface Props {
 
 export const ITEM_W = width * 0.5;
 
-const Card: React.FC<Props> = ({src, title, style, onPress}) => {
+const Card: React.RefForwardingComponent<TouchableOpacity, Props> = ({src, title, style, onPress}, ref) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Animated.View style={[style, styles.container]}>
-        <Image resizeMode="cover" style={styles.img} source={src} />
-        <Text numberOfLines={1} adjustsFontSizeToFit style={styles.title}>
-          {title}
-        </Text>
-      </Animated.View>
-    </TouchableOpacity>
+    <Animated.View style={[style, styles.container]}>
+      <Image resizeMode="cover" style={styles.img} source={src} />
+      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.title}>
+        {title}
+      </Text>
+    </Animated.View>
   );
 };
 
-export default Card;
+export default forwardRef(Card);
 
 const styles = StyleSheet.create({
   container: {

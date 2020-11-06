@@ -4,6 +4,7 @@ import {HomeStack} from '@router';
 import React from 'react';
 import {ActivityIndicator, Modal, StatusBar, View} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Color} from 'typed';
 
 function Main() {
   const {loading} = useMovie();
@@ -13,8 +14,8 @@ function Main() {
       <NavigationContainer>
         <HomeStack />
         <Modal statusBarTranslucent hardwareAccelerated animationType="slide" visible={loading} transparent={true}>
-          <View style={{backgroundColor: colore.hitam1, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size="large" color={colore.blue1} />
+          <View style={{backgroundColor: Color.hitam1, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size="large" color={Color.blue1} />
           </View>
         </Modal>
       </NavigationContainer>

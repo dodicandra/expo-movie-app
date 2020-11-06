@@ -1,14 +1,19 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Dimensions, View, Image} from 'react-native';
+import {SharedElement} from 'react-navigation-shared-element';
 
-type BookingStack = StackScreenProps<StackHome<ItemsProps>, 'Booking'>;
+const {height, width} = Dimensions.get('screen');
+
+type BookingStack = StackScreenProps<StackHome<any, ItemsProps>, 'Booking'>;
 
 const Booking: React.FC<BookingStack> = ({route}) => {
   const params = route.params;
   return (
-    <View>
-      <Text>{JSON.stringify(params, null, 2)}</Text>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <SharedElement id={`item.${params?.title}.title`}>
+        <Image source={{uri: params?.poster}} resizeMode="cover" style={{width: width * 0.4, height: height * 0.5}} />
+      </SharedElement>
     </View>
   );
 };

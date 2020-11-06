@@ -11,18 +11,11 @@ const set_loading = 'set-loading';
 const set_data = 'set-data';
 const set_page = 'set-page';
 
-type StackHome<T = object> = {
-  Home: T | undefined;
-  Booking: T | undefined;
-  Detail: T | undefined;
+type StackHome<H = object, B = object, D = object> = {
+  Home: H | undefined;
+  Booking: B | undefined;
+  Detail: D | undefined;
 };
-
-enum colore {
-  blue1 = 'rgb(105, 41, 255)',
-  hitam1 = 'rgba(200, 200, 200, 0.3)',
-  kuning = '#F7BB0E',
-  merah = '#F00000'
-}
 
 enum TypeAction {
   SET_LOADING = 'SET_LOADING',
@@ -45,8 +38,8 @@ interface ItemsProps {
 
 /**
  *
- * T for React Props
+ * P for React Props
  * S for Static React Shared Element
  *
  */
-type ComStatic<T, S> = React.FC<T & S>;
+type ComStatic<P, S> = React.FC<P> & S;

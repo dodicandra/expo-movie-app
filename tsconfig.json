@@ -17,7 +17,7 @@
       "@config": ["src/config"],
       "@api": ["src/api"],
       "@screen": ["src/screen"],
-      "@types": ["src/types"],
+      "typed": ["src/types"],
       "@router": ["src/routes"],
       "@utils": ["src/utils"],
       "@hooks": ["src/hooks"]

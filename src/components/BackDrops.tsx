@@ -15,6 +15,7 @@ import AnimatedFlatList from './AnimatedFlatList';
 import Button from './Button';
 import {ITEM_W} from './Card';
 import DetailInfo from './InfoDetail';
+import {Color} from 'types';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -54,7 +55,7 @@ class RenderItem extends React.PureComponent<List> {
               <View style={styles.rating}>
                 <Button color="white" text="popular with friend" />
                 <Button color="white" text={!item?.adult ? '+18' : '+15'} paddingHorizontal={5} />
-                <Button text={`${item?.rating}`} per backGround={colore.kuning} />
+                <Button text={`${item?.rating}`} per backGround={Color.kuning} />
               </View>
             </View>
             <DetailInfo genre={item?.genres} date={item?.releaseDate} />
@@ -70,16 +71,16 @@ class RenderItem extends React.PureComponent<List> {
 
 const BackDrops: React.FC<Props> = React.memo(
   ({data, x}) => {
-    const [movie, setMovie] = useState<ItemsProps[]>(data.reverse());
+    const [movie, setMovie] = useState<ItemsProps[]>([]);
 
     useEffect(() => {
-      setMovie(data.reverse());
+      setMovie(data);
     }, [data]);
 
     return (
       <View style={[StyleSheet.absoluteFillObject, styles.container]}>
         <AnimatedFlatList
-          data={movie}
+          data={movie.reverse()}
           keyExtractor={item => String(item.key + Math.random())}
           removeClippedSubviews={false}
           contentContainerStyle={{width, height}}

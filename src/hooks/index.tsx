@@ -23,6 +23,8 @@ const Provides: React.FC = ({children}) => {
   const [page, setPages] = useState(1);
   const [movie, loading, pages] = useFetchMore(page);
 
+  // const value = useMemo(() => ({movie, loading, pages, page, setPages}), []);
+
   return <ContextAPI.Provider value={{movie, loading, page, setPages, pages}}>{children}</ContextAPI.Provider>;
 };
 
