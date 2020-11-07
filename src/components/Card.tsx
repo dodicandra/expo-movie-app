@@ -14,18 +14,23 @@ interface Props {
 
 export const ITEM_W = width * 0.5;
 
-const Card: React.FC<Props> = ({src, title, style, onPress}) => {
-  return (
-    <Animated.View style={[style, styles.container]}>
-      <SharedElement style={styles.img} id={`item.${title}.card`}>
-        <Image resizeMode="cover" style={styles.img} source={src} />
-      </SharedElement>
-      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.title}>
-        {title}
-      </Text>
-    </Animated.View>
-  );
-};
+const Card: React.FC<Props> = React.memo(
+  ({src, title, style, onPress}) => {
+    return (
+      <Animated.View style={[style, styles.container]}>
+        <SharedElement style={styles.img} id={`item.${title}.card`}>
+          <Image resizeMode="cover" style={styles.img} source={src} />
+        </SharedElement>
+        <Text numberOfLines={1} adjustsFontSizeToFit style={styles.title}>
+          {title}
+        </Text>
+      </Animated.View>
+    );
+  },
+  (prev, next) => {
+    return prev.title !== next.title;
+  }
+);
 
 export default React.memo(Card);
 

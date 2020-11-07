@@ -12,7 +12,7 @@ const Detail: React.FC<DetailStack> = ({route}) => {
   return (
     <View style={[StyleSheet.absoluteFill, styles.root]}>
       <SharedElement style={[StyleSheet.absoluteFill]} id={`item.${params?.title}.card`}>
-        <Image source={{uri: params?.poster}} resizeMode="stretch" style={[StyleSheet.absoluteFill]} />
+        <Image source={{uri: params?.backdrop}} resizeMode="stretch" style={{position: 'absolute', ...styles.img}} />
       </SharedElement>
     </View>
   );

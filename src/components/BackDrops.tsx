@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, ImageBackground, Keyboard, ListRenderItemInfo, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import Animated from 'react-native-reanimated';
+
 import {Color} from 'types';
+
 import AnimatedFlatList from './AnimatedFlatList';
 import Button from './Button';
 import {ITEM_W} from './Card';
