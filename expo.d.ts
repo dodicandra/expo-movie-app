@@ -7,10 +7,6 @@ declare module '*.svg' {
   export default content
 }
 
-const set_loading = 'set-loading'
-const set_data = 'set-data'
-const set_page = 'set-page'
-
 type StackHome<H = object, B = object, D = object> = {
   Home: H | undefined
   Booking: B | undefined

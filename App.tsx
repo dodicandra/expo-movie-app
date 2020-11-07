@@ -9,17 +9,19 @@ import {Color} from 'typed';
 function Main() {
   const {loading} = useMovie();
   return (
-    <SafeAreaProvider>
-      <StatusBar animated translucent showHideTransition="fade" hidden />
-      <NavigationContainer>
-        <HomeStack />
-        <Modal statusBarTranslucent hardwareAccelerated animationType="slide" visible={loading} transparent={true}>
-          <View style={{backgroundColor: Color.hitam1, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size="large" color={Color.blue1} />
-          </View>
-        </Modal>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <>
+      <SafeAreaProvider>
+        <StatusBar animated translucent showHideTransition="fade" hidden />
+        <NavigationContainer>
+          <HomeStack />
+        </NavigationContainer>
+      </SafeAreaProvider>
+      <Modal animated animationType="slide" visible={loading} transparent>
+        <View style={{backgroundColor: Color.hitam1, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color={Color.blue1} />
+        </View>
+      </Modal>
+    </>
   );
 }
 

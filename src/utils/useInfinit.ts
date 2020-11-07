@@ -1,5 +1,6 @@
 import {getMovies} from '@api';
 import {useEffect, useReducer} from 'react';
+import {set_loading, set_data, set_page} from 'types';
 
 interface State {
   movie: ItemsProps[];
@@ -35,13 +36,13 @@ const reducer = (state: State, action: Action): State => {
       const datas = new Set([{key: `item-right`, title: `title-right`}, ...action.payload, {key: `item-left`, title: `title-left`}]);
       return {
         ...state,
-        loading: true,
+        loading: false,
         movie: [...datas] as ItemsProps[]
       };
     case 'set-loading':
       return {
         ...state,
-        loading: false
+        loading: true
       };
     case 'set-page':
       return {
@@ -55,36 +56,22 @@ const reducer = (state: State, action: Action): State => {
 
 export function useFetchMore(pagenumber: number | string) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   useEffect(() => {
-    dispatch({type: 'set-data', payload: []});
-  }, [pagenumber]);
-
-  useEffect(() => {
-    let didcancel = false;
-
     const getMoviess = async () => {
       try {
+        dispatch({type: 'set-loading'});
         const data = await getMovies(pagenumber);
         dispatch({
           type: 'set-data',
           payload: data.movies
         });
         dispatch({type: 'set-page', payload: {page: data.page, total: data.total_pages}});
-        dispatch({type: 'set-loading'});
-        return () => {
-          didcancel = true;
-        };
       } catch (err) {
         console.log(err);
         dispatch({type: 'set-loading'});
       }
     };
     getMoviess();
-
-    return () => {
-      didcancel = true;
-    };
   }, [pagenumber]);
 
   return [state.movie, state.loading, state.page] as const;

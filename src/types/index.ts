@@ -7,3 +7,7 @@ export enum Color {
   grey1 = 'rgba(126, 126, 126, 1)',
   white = '#FFFFFF'
 }
+
+export const set_loading = 'set-loading';
+export const set_data = 'set-data';
+export const set_page = 'set-page';

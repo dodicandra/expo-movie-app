@@ -2,7 +2,7 @@ import {AnimatedFlatList, Arrow, BackDrops, Button, Card, SearchBar} from '@comp
 import {useMovie} from '@hooks';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ITEM_W} from 'components/Card';
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import {
   Dimensions,
   GestureResponderEvent,
@@ -11,9 +11,12 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
   TouchableOpacity,
-  View
+  View,
+  Animated as An,
+  FlatListProps,
+  FlatList
 } from 'react-native';
-import Animated, {Extrapolate} from 'react-native-reanimated';
+import Animated, {Extrapolate, useValue} from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('screen');
@@ -75,20 +78,22 @@ class RenderItem extends React.PureComponent<List> {
 }
 
 const Home: React.FC<HomeStack> = ({navigation}) => {
-  const scrollX = new Animated.Value(0);
-
-  const {setPages, movie, page, pages, loading} = useMovie();
-
-  const onScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>([{nativeEvent: {contentOffset: {x: scrollX}}}], {
-    useNativeDriver: true
-  });
+  const scrollX = useValue(0);
+  const {setPages, movie, page, pages} = useMovie();
+  const ref = useRef<FlatList>(null);
+  const onScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>([{nativeEvent: {contentOffset: {x: scrollX}}}]);
   const next = Number(pages?.total) - Number(pages?.page);
-
   const actions = (items: ItemsProps) => {
     navigation.navigate('Detail', items);
   };
 
-  if (loading) return <View />;
+  console.log(ref.current);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref?.current?.scrollToEnd();
+    }
+  }, [page]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -109,6 +114,7 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
         style={{top: height * 0.4, right: width * 0.04, zIndex: 21}}
       />
       <AnimatedFlatList
+        ref={ref}
         data={movie}
         horizontal
         showsHorizontalScrollIndicator={false}
