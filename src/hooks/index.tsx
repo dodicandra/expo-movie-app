@@ -1,5 +1,5 @@
-import React, {createContext, useContext, useMemo, useState} from 'react';
 import {useFetchMore} from '@utils';
+import React, {createContext, useContext, useState} from 'react';
 
 interface Context {
   loading: boolean;

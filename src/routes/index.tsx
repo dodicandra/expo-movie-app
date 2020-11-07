@@ -1,10 +1,33 @@
 import {Booking, Detail, Home} from '@screen';
 import React from 'react';
+import Animated from 'react-native-reanimated';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
 const Screen = createSharedElementStackNavigator<StackHome>();
 
-const iosTransitionSpec = {
+export function springyFadeIn() {
+  const transitionSpec = {
+    timing: Animated.spring,
+    tension: 10,
+    useNativeDriver: true
+  };
+
+  return {
+    transitionSpec,
+    screenInterpolator: ({position, scene}: any) => {
+      const {index} = scene;
+
+      const opacity = position.interpolate({
+        inputRange: [index - 1, index],
+        outputRange: [0, 1]
+      });
+
+      return {opacity};
+    }
+  };
+}
+
+const config = {
   animation: 'spring',
   config: {
     stiffness: 1000,
@@ -20,20 +43,21 @@ export const HomeStack = () => {
   return (
     <Screen.Navigator mode="card" screenOptions={{headerShown: false, animationTypeForReplace: 'push'}}>
       <Screen.Screen name="Home" component={Home} />
-      <Screen.Screen name="Booking" component={Booking} />
+      <Screen.Screen
+        name="Booking"
+        component={Booking}
+        sharedElementsConfig={route => {
+          const {title} = route.params;
+
+          return [{id: `button.red.${title}`, align: 'auto'}];
+        }}
+      />
       <Screen.Screen
         name="Detail"
         component={Detail}
-        options={{
-          gestureEnabled: false,
-          transitionSpec: {
-            open: {animation: 'timing', config: {delay: 1000}},
-            close: {animation: 'timing', config: {duration: 1000}}
-          }
-        }}
-        sharedElementsConfig={route => {
+        sharedElementsConfig={(route, o, n) => {
           const {title} = route.params;
-          return [{id: `title.${title}.card`, animation: 'fade-in'}];
+          return [{id: `item.${title}.card`, align: 'center-center'}];
         }}
       />
     </Screen.Navigator>

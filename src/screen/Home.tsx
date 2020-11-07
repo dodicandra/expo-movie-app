@@ -1,6 +1,7 @@
 import {AnimatedFlatList, Arrow, BackDrops, Button, Card, SearchBar} from '@components';
 import {useMovie} from '@hooks';
 import {StackScreenProps} from '@react-navigation/stack';
+import {ITEM_W} from 'components/Card';
 import React from 'react';
 import {
   Dimensions,
@@ -9,14 +10,11 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
-  View,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from 'react-native';
 import Animated, {Extrapolate} from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
-import {ITEM_W} from 'components/Card';
-import {SharedElement} from 'react-navigation-shared-element';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -26,16 +24,18 @@ type List = {
   listX: Animated.Value<number>;
   data: ListRenderItemInfo<ItemsProps>;
   onPress?: (e: GestureResponderEvent) => void;
+  booking?: (e: GestureResponderEvent) => void;
 };
 
-type HomeStack = StackScreenProps<StackHome<ItemsProps>, 'Home'>;
+type HomeStack = StackScreenProps<StackHome<ItemsProps, ItemsProps>, 'Home'>;
 
 class RenderItem extends React.PureComponent<List> {
   render() {
     const {
       listX,
       data: {index, item},
-      onPress
+      onPress,
+      booking
     } = this.props;
 
     if (!item.poster) {
@@ -64,12 +64,10 @@ class RenderItem extends React.PureComponent<List> {
     return (
       <View style={styles.item}>
         <Animated.View style={{alignItems: 'center', opacity, transform: [{translateY}]}}>
-          <Button color="white" style={{marginTop: 30}} text="buy ticket" backGround="#F00000" />
+          <Button uniq={item.title} onPress={booking} color="white" style={{marginTop: 30}} text="buy ticket" backGround="#F00000" />
         </Animated.View>
         <TouchableOpacity onPress={onPress}>
-          <SharedElement id={`item.${item.title}.card`}>
-            <Card style={{transform: [{translateY: itemTranslate}]}} src={{uri: item.poster}} title={item.title} />
-          </SharedElement>
+          <Card style={{transform: [{translateY: itemTranslate}]}} src={{uri: item.poster}} title={item.title} />
         </TouchableOpacity>
       </View>
     );
@@ -115,7 +113,7 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.items}
-        keyExtractor={item => String(item.key + Math.random() * 1000)}
+        keyExtractor={item => item.key}
         contentContainerStyle={{paddingVertical: 60}}
         snapToInterval={ITEM_W}
         onScroll={onScroll}
@@ -124,7 +122,14 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
         maxToRenderPerBatch={10}
         updateCellsBatchingPeriod={20}
         initialNumToRender={10}
-        renderItem={item => <RenderItem onPress={() => actions(item.item)} data={item} listX={scrollX} />}
+        renderItem={item => (
+          <RenderItem
+            booking={() => navigation.navigate('Booking', item.item)}
+            onPress={() => actions(item.item)}
+            data={item}
+            listX={scrollX}
+          />
+        )}
       />
     </SafeAreaView>
   );

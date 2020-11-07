@@ -1,5 +1,6 @@
 import React from 'react';
-import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
+import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {SharedElement} from 'react-navigation-shared-element';
 
 interface Props {
   text?: string;
@@ -10,23 +11,28 @@ interface Props {
   paddingHorizontal?: number;
   style?: ViewStyle;
   disabled?: boolean;
+  uniq?: any;
 }
 
-const Button: React.FC<Props> = ({disabled, text, onPress, color, per, backGround, paddingHorizontal, style}) => {
+const Button: React.FC<Props> = ({disabled, text, onPress, color, per, backGround, paddingHorizontal, style, uniq}) => {
   return (
-    <TouchableOpacity disabled={disabled} style={styles.container} onPress={onPress}>
-      <Text
-        numberOfLines={1}
-        adjustsFontSizeToFit
-        style={[styles.text, style, {color, backgroundColor: backGround, paddingHorizontal}]}
-      >
-        {text}
-        {per && (
-          <Text numberOfLines={1} adjustsFontSizeToFit style={styles.span}>
-            /10
+    <TouchableOpacity disabled={disabled} onPress={onPress}>
+      <SharedElement id={`button.red.${uniq}`}>
+        <View style={styles.container}>
+          <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={[styles.text, style, {color, backgroundColor: backGround, paddingHorizontal}]}
+          >
+            {text}
+            {per && (
+              <Text numberOfLines={1} adjustsFontSizeToFit style={styles.span}>
+                /10
+              </Text>
+            )}
           </Text>
-        )}
-      </Text>
+        </View>
+      </SharedElement>
     </TouchableOpacity>
   );
 };

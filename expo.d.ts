@@ -1,21 +1,21 @@
 /// <reference types="react" />
 
 declare module '*.svg' {
-  import React from 'react';
-  import {SvgProps} from 'react-native-svg';
-  const content: React.FC<SvgProps>;
-  export default content;
+  import React from 'react'
+  import {SvgProps} from 'react-native-svg'
+  const content: React.FC<SvgProps>
+  export default content
 }
 
-const set_loading = 'set-loading';
-const set_data = 'set-data';
-const set_page = 'set-page';
+const set_loading = 'set-loading'
+const set_data = 'set-data'
+const set_page = 'set-page'
 
 type StackHome<H = object, B = object, D = object> = {
-  Home: H | undefined;
-  Booking: B | undefined;
-  Detail: D | undefined;
-};
+  Home: H | undefined
+  Booking: B | undefined
+  Detail: D | undefined
+}
 
 enum TypeAction {
   SET_LOADING = 'SET_LOADING',
@@ -24,16 +24,16 @@ enum TypeAction {
 }
 
 interface ItemsProps {
-  key: string;
-  title: string;
-  poster: string;
-  backdrop: string;
-  rating: string;
-  description: string;
-  releaseDate: string;
-  genres: string[];
-  adult: boolean;
-  price: number;
+  key: string
+  title: string
+  poster: string
+  backdrop: string
+  rating: string
+  description: string
+  releaseDate: string
+  genres: string[]
+  adult: boolean
+  price: number
 }
 
 /**
@@ -42,4 +42,4 @@ interface ItemsProps {
  * S for Static React Shared Element
  *
  */
-type ComStatic<P, S> = React.FC<P> & S;
+type ComStatic<P, S> = React.FC<P> & S

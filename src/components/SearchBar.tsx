@@ -1,28 +1,29 @@
 import React from 'react';
-import {StyleSheet, View, TextInput, Text, Dimensions, TouchableOpacity} from 'react-native';
-import Search from '../../assets/svg/search.svg';
+import {Dimensions, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import Menu from '../../assets/svg/menu.svg';
+import Search from '../../assets/svg/search.svg';
 import Box from './Box';
+import {Color} from 'types';
 
 const {width, height} = Dimensions.get('screen');
 
 const SearchBar: React.FC = () => {
   return (
     <View style={styles.wraper}>
-      <Box size={height * 0.06}>
+      <Box borderColor={Color.white} size={height * 0.06}>
         <TouchableOpacity>
-          <Menu width={20} height={20} fill="#FFFFFF" />
+          <Menu width={20} height={20} fill={Color.white} />
         </TouchableOpacity>
       </Box>
       <View style={[styles.container]}>
         <TextInput
           numberOfLines={1}
           allowFontScaling
-          placeholderTextColor="#FFFFFF"
+          placeholderTextColor={Color.white}
           style={styles.input}
           placeholder="Search Films..."
         />
-        <Search width={25} height={25} fill="#FFFFFF" />
+        <Search width={25} height={25} fill={Color.white} />
       </View>
     </View>
   );

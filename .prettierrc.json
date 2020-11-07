@@ -1,8 +1,16 @@
 {
   "endOfLine": "auto",
-  "printWidth": 130,
+  "printWidth": 140,
   "bracketSpacing": false,
   "arrowParens": "avoid",
   "singleQuote": true,
-  "trailingComma": "none"
+  "trailingComma": "none",
+  "proseWrap": "never",
+  "semi": true,
+  "overrides": [
+    {
+      "files": "*.d.ts",
+      "options": {"semi": false}
+    }
+  ]
 }

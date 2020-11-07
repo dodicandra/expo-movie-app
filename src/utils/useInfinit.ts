@@ -32,11 +32,7 @@ const initialState: State = {
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'set-data':
-      const datas = new Set([
-        {key: `item-right`, title: `title-right`},
-        ...action.payload,
-        {key: `item-left`, title: `title-left`}
-      ]);
+      const datas = new Set([{key: `item-right`, title: `title-right`}, ...action.payload, {key: `item-left`, title: `title-left`}]);
       return {
         ...state,
         loading: true,

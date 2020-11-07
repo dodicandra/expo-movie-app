@@ -1,6 +1,5 @@
 import React from 'react';
 import {GestureResponderEvent, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
-
 import Buton from '../../assets/svg/arrow.svg';
 
 interface Props {

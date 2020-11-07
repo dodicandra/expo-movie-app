@@ -41,8 +41,7 @@ const genres = {
   10770: 'TV Movie'
 };
 
-const API_URL = (page: string | number) =>
-  `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
+const API_URL = (page: string | number) => `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
 const getImagePath = (path: string) => `https://image.tmdb.org/t/p/w440_and_h660_face${path}`;
 const getBackdropPath = (path: string) => `https://image.tmdb.org/t/p/w370_and_h556_multi_faces${path}`;
 
