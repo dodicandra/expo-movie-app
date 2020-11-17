@@ -1,19 +1,17 @@
 import {AnimatedFlatList, Arrow, BackDrops, Button, Card, SearchBar} from '@components';
 import {useMovie} from '@hooks';
 import {StackScreenProps} from '@react-navigation/stack';
-import React, {useEffect, useRef, useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   GestureResponderEvent,
   ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
-  View,
-  ScrollView,
-  FlatList,
-  Platform
+  View
 } from 'react-native';
 import Animated, {Extrapolate, useValue} from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';

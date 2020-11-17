@@ -1,6 +1,7 @@
 import React from 'react';
-import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle, PixelRatio} from 'react-native';
 import {SharedElement} from 'react-navigation-shared-element';
+import {normalize} from 'screen';
 
 interface Props {
   text?: string;
@@ -39,12 +40,12 @@ const Button: React.FC<Props> = ({disabled, text, onPress, color, per, backGroun
 
 const styles = StyleSheet.create({
   container: {
-    padding: 0
+    marginHorizontal: 5
   },
   text: {
     borderRadius: 9,
     textTransform: 'uppercase',
-    fontSize: 16,
+    fontSize: 14,
     letterSpacing: 1.3,
     paddingVertical: 10
   },

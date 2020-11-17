@@ -57,7 +57,7 @@ export const HomeStack = () => {
         component={Detail}
         sharedElementsConfig={(route, o, n) => {
           const {title} = route.params;
-          return [{id: `item.${title}.card`, align: 'center-center'}];
+          return [{id: `item.${title}.card`, align: 'center-center', animation: 'move'}];
         }}
       />
     </Screen.Navigator>

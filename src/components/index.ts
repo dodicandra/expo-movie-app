@@ -6,3 +6,4 @@ export {default as Card} from './Card';
 export {default as DetailInfo} from './InfoDetail';
 export {default as SearchBar} from './SearchBar';
 export {default as Box} from './Box';
+export {default as Header} from './Header';

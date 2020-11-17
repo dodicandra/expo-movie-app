@@ -1,13 +1,10 @@
-import {Box} from '@components';
+import {Header} from '@components';
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SharedElement} from 'react-navigation-shared-element';
 
 import {Color} from 'types';
-
-import ArrowSlim from '../../assets/svg/arrow-slim.svg';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -18,11 +15,7 @@ const Booking: React.FC<BookingStack> = ({route}) => {
   return (
     <View style={{flex: 1, backgroundColor: Color.hitam0}}>
       <View style={{flex: 1}}>
-        <Box size={40}>
-          <TouchableOpacity>
-            <ArrowSlim style={{transform: [{rotate: '180deg'}]}} fill={Color.grey1} width={20} height={20} />
-          </TouchableOpacity>
-        </Box>
+        <Header title={params?.title} />
       </View>
       <View style={styles.payWraper}>
         <View style={styles.price}>
