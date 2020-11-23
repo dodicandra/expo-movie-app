@@ -1,21 +1,43 @@
-import {Header} from '@components';
+import {Dates, Header} from '@components';
 import {StackScreenProps} from '@react-navigation/stack';
-import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import React, {memo, useState, Profiler} from 'react';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {SharedElement} from 'react-navigation-shared-element';
 
 import {Color} from 'types';
+import {getDaysInMonth} from 'utils';
 
-const {height, width} = Dimensions.get('screen');
+const {width} = Dimensions.get('screen');
 
-type BookingStack = StackScreenProps<StackHome<any, ItemsProps>, 'Booking'>;
+type BookingStack = StackScreenProps<StackHome<object, ItemsProps>, 'Booking'>;
+const date = getDaysInMonth(new Date().getMonth(), new Date().getFullYear(), new Date().getDate());
 
-const Booking: React.FC<BookingStack> = ({route}) => {
+const Booking: React.FC<BookingStack> = ({route, navigation}) => {
   const params = route.params;
+  const [selected, setSelected] = useState(0);
+
+  console.log('re-renders');
   return (
     <View style={{flex: 1, backgroundColor: Color.hitam0}}>
       <View style={{flex: 1}}>
-        <Header title={params?.title} />
+        <Header onPress={() => navigation.goBack()} title={params?.title} />
+        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+          <View style={styles.date}>
+            <ScrollView contentContainerStyle={{paddingHorizontal: 10}} horizontal showsHorizontalScrollIndicator={false}>
+              {date.map((dates, i) => (
+                <Profiler
+                  key={dates.num}
+                  id={`profile-${i}`}
+                  onRender={(...c) => {
+                    console.log('object', c);
+                  }}
+                >
+                  <Dates selected={selected === i} onPress={() => setSelected(i)} day={dates.day} num={dates.num} />
+                </Profiler>
+              ))}
+            </ScrollView>
+          </View>
+        </ScrollView>
       </View>
       <View style={styles.payWraper}>
         <View style={styles.price}>
@@ -35,7 +57,7 @@ const Booking: React.FC<BookingStack> = ({route}) => {
   );
 };
 
-export default Booking;
+export default memo(Booking);
 
 const styles = StyleSheet.create({
   payWraper: {flex: 0.1, flexDirection: 'row'},
@@ -61,5 +83,14 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     fontWeight: 'bold',
     textAlign: 'center'
+  },
+  date: {
+    backgroundColor: 'black',
+    paddingVertical: 30,
+    borderTopLeftRadius: 14,
+    borderBottomLeftRadius: 14,
+    marginTop: 35,
+    width: width * 0.85,
+    alignSelf: 'flex-end'
   }
 });

@@ -7,3 +7,4 @@ export {default as DetailInfo} from './InfoDetail';
 export {default as SearchBar} from './SearchBar';
 export {default as Box} from './Box';
 export {default as Header} from './Header';
+export {default as Dates} from './Date';

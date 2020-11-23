@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 
 import {Color} from 'types';
 
-import AnimatedFlatList, {Hoc} from './AnimatedFlatList';
+import AnimatedFlatList from './AnimatedFlatList';
 import Button from './Button';
 import {ITEM_W} from './Card';
 import DetailInfo from './InfoDetail';
@@ -138,4 +138,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Hoc(BackDrops);
+export default BackDrops;

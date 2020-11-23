@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 
 const {width} = Dimensions.get('screen');
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DetailInfo;
+export default memo(DetailInfo);

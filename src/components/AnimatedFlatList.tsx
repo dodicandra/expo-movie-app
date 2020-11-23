@@ -30,7 +30,7 @@ function AnimatedFlatList<P, S = {}>(Componen: React.ComponentClass<P, S>) {
 const AFlatList = Animated.createAnimatedComponent(FlatList);
 
 const AnimatedRef: React.RefForwardingComponent<any, FlatListProps<ItemsProps>> = (props, ref) => {
-  let _ref = useRef<Animated.ScrollView>(null);
+  const _ref = useRef<Animated.ScrollView>(null);
 
   return <AFlatList ref={ref} {...props} />;
 };

@@ -1,7 +1,6 @@
-import React from 'react';
-import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle, PixelRatio} from 'react-native';
+import React, {memo} from 'react';
+import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {SharedElement} from 'react-navigation-shared-element';
-import {normalize} from 'screen';
 
 interface Props {
   text?: string;
@@ -59,4 +58,4 @@ Button.defaultProps = {
   paddingHorizontal: 12
 };
 
-export default Button;
+export default memo(Button);

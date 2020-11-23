@@ -27,6 +27,7 @@ export function springyFadeIn() {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const config = {
   animation: 'spring',
   config: {
@@ -55,7 +56,7 @@ export const HomeStack = () => {
       <Screen.Screen
         name="Detail"
         component={Detail}
-        sharedElementsConfig={(route, o, n) => {
+        sharedElementsConfig={route => {
           const {title} = route.params;
           return [{id: `item.${title}.card`, align: 'center-center', animation: 'move'}];
         }}

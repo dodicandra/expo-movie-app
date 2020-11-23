@@ -11,7 +11,7 @@ interface Props {
 
 const Box: React.FC<Props> = ({children, size, borderColor = Color.grey1, color = 'transparent', style}) => {
   return (
-    <View style={[style, styles.container, {height: size, width: size, borderRadius: size! / 5, borderColor, backgroundColor: color}]}>
+    <View style={[style, styles.container, {height: size, width: size, borderRadius: size / 5, borderColor, backgroundColor: color}]}>
       {children}
     </View>
   );

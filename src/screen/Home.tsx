@@ -1,13 +1,14 @@
 import {AnimatedFlatList, Arrow, BackDrops, Button, Card, SearchBar} from '@components';
 import {useMovie} from '@hooks';
 import {StackScreenProps} from '@react-navigation/stack';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState, memo} from 'react';
 import {
   Dimensions,
   GestureResponderEvent,
   ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -90,7 +91,7 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
   const calback = useCallback(() => {
     setPages(page + 1);
     setNext(true);
-  }, [page]);
+  }, [page, setPages]);
 
   const prev = () => {
     setPages(old => Math.max(old - 1, 1));
@@ -102,7 +103,7 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
       //@ts-ignore
       ref.current.getNode().scrollToIndex({animated: true, index: 0});
     }
-  }, [next, calback]);
+  }, [next, calback, nextPage]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -123,8 +124,8 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
         onEndReachedThreshold={0.2}
         snapToAlignment="start"
         maxToRenderPerBatch={10}
-        decelerationRate="fast"
-        onEndReached={e => calback()}
+        onEndReached={() => calback()}
+        decelerationRate={Platform.OS === 'ios' ? 0 : 0.99}
         updateCellsBatchingPeriod={20}
         initialNumToRender={10}
         renderItem={item => (
@@ -155,4 +156,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Home;
+export default memo(Home);
