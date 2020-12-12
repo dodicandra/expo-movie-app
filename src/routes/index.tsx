@@ -42,7 +42,16 @@ const config = {
 
 export const HomeStack = () => {
   return (
-    <Screen.Navigator mode="card" screenOptions={{headerShown: false, animationTypeForReplace: 'push'}}>
+    <Screen.Navigator
+      mode="modal"
+      screenOptions={{
+        headerShown: false,
+        animationTypeForReplace: 'push',
+        gestureEnabled: true,
+        cardOverlayEnabled: true,
+        cardStyle: {backgroundColor: 'transparent'}
+      }}
+    >
       <Screen.Screen name="Home" component={Home} />
       <Screen.Screen
         name="Booking"
@@ -50,7 +59,7 @@ export const HomeStack = () => {
         sharedElementsConfig={route => {
           const {title} = route.params;
 
-          return [{id: `button.red.${title}`, align: 'auto'}];
+          return [{id: `button.red.${title}`}];
         }}
       />
       <Screen.Screen
@@ -58,7 +67,7 @@ export const HomeStack = () => {
         component={Detail}
         sharedElementsConfig={route => {
           const {title} = route.params;
-          return [{id: `item.${title}.card`, align: 'center-center', animation: 'move'}];
+          return [{id: `item.${title}.card`}];
         }}
       />
     </Screen.Navigator>

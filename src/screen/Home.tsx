@@ -1,7 +1,7 @@
 import {AnimatedFlatList, Arrow, BackDrops, Button, Card, SearchBar} from '@components';
 import {useMovie} from '@hooks';
 import {StackScreenProps} from '@react-navigation/stack';
-import React, {useCallback, useEffect, useRef, useState, memo} from 'react';
+import React, {useCallback, useEffect, useRef, useState, memo, FC} from 'react';
 import {
   Dimensions,
   GestureResponderEvent,
@@ -32,50 +32,41 @@ type List = {
 
 type HomeStack = StackScreenProps<StackHome<ItemsProps, ItemsProps>, 'Home'>;
 
-class RenderItem extends React.PureComponent<List> {
-  render() {
-    const {
-      listX,
-      data: {index, item},
-      onPress,
-      booking
-    } = this.props;
+const RenderItem: FC<List> = memo(({data: {index, item}, listX, onPress, booking}) => {
+  const inputRange = [(index - 2) * ITEM_W, (index - 1) * ITEM_W, index * ITEM_W];
 
-    if (!item.poster) {
-      return <View style={{width: EMTY}} />;
-    }
+  const translateY = listX.interpolate({
+    inputRange,
+    outputRange: [-100, 0, -100],
+    extrapolate: Extrapolate.CLAMP
+  });
 
-    const inputRange = [(index - 2) * ITEM_W, (index - 1) * ITEM_W, index * ITEM_W];
+  const opacity = listX.interpolate({
+    inputRange,
+    outputRange: [0, 1, 0],
+    extrapolate: Extrapolate.CLAMP
+  });
+  const itemTranslate = listX.interpolate({
+    inputRange,
+    outputRange: [100, 40, 100],
+    extrapolate: Extrapolate.CLAMP
+  });
 
-    const translateY = listX.interpolate({
-      inputRange,
-      outputRange: [-100, 0, -100],
-      extrapolate: Extrapolate.CLAMP
-    });
-
-    const opacity = listX.interpolate({
-      inputRange,
-      outputRange: [0, 1, 0],
-      extrapolate: Extrapolate.CLAMP
-    });
-    const itemTranslate = listX.interpolate({
-      inputRange,
-      outputRange: [100, 40, 100],
-      extrapolate: Extrapolate.CLAMP
-    });
-
-    return (
-      <View style={styles.item}>
-        <Animated.View style={{alignItems: 'center', opacity, transform: [{translateY}]}}>
-          <Button uniq={item.title} onPress={booking} color="white" style={{marginTop: 30}} text="buy ticket" backGround="#F00000" />
-        </Animated.View>
-        <TouchableOpacity onPress={onPress}>
-          <Card style={{transform: [{translateY: itemTranslate}]}} src={{uri: item.poster}} title={item.title} />
-        </TouchableOpacity>
-      </View>
-    );
+  if (!item.poster) {
+    return <View style={{width: EMTY}} />;
   }
-}
+
+  return (
+    <View style={styles.item}>
+      <Animated.View style={{alignItems: 'center', opacity, transform: [{translateY}]}}>
+        <Button uniq={item.title} onPress={booking} color="white" style={{marginTop: 30}} text="buy ticket" backGround="#F00000" />
+      </Animated.View>
+      <TouchableOpacity onPress={onPress}>
+        <Card style={{transform: [{translateY: itemTranslate}]}} src={{uri: item.poster}} title={item.title} />
+      </TouchableOpacity>
+    </View>
+  );
+});
 
 const Home: React.FC<HomeStack> = ({navigation}) => {
   const scrollX = useValue(0);
@@ -84,9 +75,13 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
   const ref = useRef<Animated.ScrollView & ScrollView>(null);
   const onScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>([{nativeEvent: {contentOffset: {x: scrollX}}}]);
   const next = Number(pages?.total) - Number(pages?.page);
-  const actions = (items: ItemsProps) => {
-    navigation.navigate('Detail', items);
-  };
+
+  const actions = useCallback(
+    (items: ItemsProps) => {
+      navigation.navigate('Detail', items);
+    },
+    [navigation]
+  );
 
   const calback = useCallback(() => {
     setPages(page + 1);
@@ -97,6 +92,11 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
     setPages(old => Math.max(old - 1, 1));
     setNext(false);
   };
+
+  const Rendermemo = useCallback<FC<List>>(
+    ({data, listX, booking, onPress}) => <RenderItem data={data} listX={listX} booking={booking} onPress={onPress} />,
+    []
+  );
 
   useEffect(() => {
     if (ref.current && nextPage) {
@@ -129,11 +129,12 @@ const Home: React.FC<HomeStack> = ({navigation}) => {
         updateCellsBatchingPeriod={20}
         initialNumToRender={10}
         renderItem={item => (
-          <RenderItem
+          <Rendermemo
+            key={item.item.key}
+            listX={scrollX}
+            data={item}
             booking={() => navigation.navigate('Booking', item.item)}
             onPress={() => actions(item.item)}
-            data={item}
-            listX={scrollX}
           />
         )}
       />
